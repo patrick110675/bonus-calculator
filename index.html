@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#0f5bd8" />
+  <title>2026 業務主管獎金試算</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<header class="topbar">
+  <div><small>2026</small><h1>業務主管獎金試算</h1></div>
+  <button class="icon-btn" id="themeBtn" aria-label="切換深色模式">◐</button>
+</header>
+
+<main class="container">
+  <section id="dashboard" class="page active">
+    <div class="hero-card">
+      <span>本月預估總收入</span>
+      <strong id="totalIncome">NT$ 0</strong>
+      <small>獎金合計＋目前顯示 FYC</small>
+    </div>
+
+    <div class="kpi-grid" id="kpiGrid"></div>
+
+    <div class="card">
+      <div class="card-head"><h2>快速輸入</h2><button class="text-btn" data-go="calculator">完整試算 →</button></div>
+      <div class="form-grid compact">
+        <label>職級<select id="quickRank"><option>UA</option><option>AS</option><option>SAS</option><option>SAS(B)</option><option>UM</option></select></label>
+        <label>原始 FYC<input id="quickFyc" type="number" min="0" inputmode="decimal" /></label>
+        <label class="switch-row">首期符合 10% 加成<input id="quickBonus" type="checkbox" /><span class="switch"></span></label>
+      </div>
+    </div>
+    <div class="notice">本 App 依上傳的 2026 試算表公式製作，實際核發仍以公司最新公告、資格審核及薪資明細為準。</div>
+  </section>
+
+  <section id="calculator" class="page">
+    <div class="section-title"><h2>個人獎金試算</h2><button class="danger-link" id="resetCalc">重設</button></div>
+    <div class="card form-card">
+      <div class="form-grid">
+        <label>職級<select data-input="rank"><option>UA</option><option>AS</option><option>SAS</option><option>SAS(B)</option><option>UM</option></select></label>
+        <label>原始 FYC<input data-input="rawFyc" type="number" min="0" inputmode="decimal" /></label>
+        <label class="switch-row">首期付款符合 10% 加成<input data-input="firstPayBonus" type="checkbox" /><span class="switch"></span></label>
+        <label>半年 FYC<input data-input="halfYearFyc" type="number" min="0" inputmode="decimal" /></label>
+        <label>全年 FYC<input data-input="annualFyc" type="number" min="0" inputmode="decimal" /></label>
+        <label>本季加權保費<input data-input="quarterWeighted" type="number" min="0" inputmode="decimal" /></label>
+        <label>本季加權保費目標<input data-input="quarterTarget" type="number" min="0" inputmode="decimal" /></label>
+        <label>年資（年）<input data-input="years" type="number" min="0" step="0.1" /></label>
+        <label>區單位組數（不含本人）<input data-input="unitGroups" type="number" min="0" /></label>
+        <label>本季領獎人數<input data-input="quarterWinners" type="number" min="0" /></label>
+        <label>給付款項一其他調整<input data-input="adjust1" type="number" inputmode="decimal" /></label>
+        <label>給付款項二其他調整<input data-input="adjust2" type="number" inputmode="decimal" /></label>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>計算結果</h3>
+      <div id="resultRows" class="result-list"></div>
+    </div>
+  </section>
+
+  <section id="team" class="page">
+    <div class="section-title"><h2>組織名單</h2><button class="primary small" id="addMemberBtn">＋ 新增</button></div>
+    <div class="card">
+      <p class="hint">第一筆請先建立本人，再建立夥伴及直屬推薦人。系統最多計算三代。</p>
+      <div id="memberList" class="stack-list"></div>
+    </div>
+
+    <div class="section-title"><h2>轄下夥伴獎金</h2><button class="primary small" id="addPartnerBonusBtn">＋ 新增</button></div>
+    <div class="card"><div id="partnerBonusList" class="stack-list"></div></div>
+  </section>
+
+  <section id="fyc" class="page">
+    <div class="section-title"><h2>每月 FYC 明細</h2><button class="primary small" id="addFycBtn">＋ 新增</button></div>
+    <div class="card"><div id="fycList" class="stack-list"></div></div>
+    <div class="card">
+      <h3>半年特別獎金</h3>
+      <div id="halfYearList" class="stack-list"></div>
+    </div>
+  </section>
+
+  <section id="settings" class="page">
+    <div class="section-title"><h2>資料與設定</h2></div>
+    <div class="card action-list">
+      <button id="exportBtn">匯出備份 JSON</button>
+      <label class="file-button">匯入備份 JSON<input id="importInput" type="file" accept="application/json" /></label>
+      <button id="printBtn">列印／存成 PDF</button>
+      <button id="clearAllBtn" class="danger">清除全部資料</button>
+    </div>
+    <div class="card">
+      <h3>計算規則摘要</h3>
+      <ul class="rules">
+        <li>首期符合條件：原始 FYC 先乘 1.1。</li>
+        <li>每月業績獎金與單位獎金，再以顯示 FYC 乘 1.1 判定。</li>
+        <li>半年與全年 FYC 直接輸入公司系統數字，不再乘 10%。</li>
+        <li>半年特別獎金：每位主管本人＋直轄 AG 達 18 萬才計算。</li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<nav class="bottom-nav">
+  <button class="active" data-page="dashboard">⌂<span>首頁</span></button>
+  <button data-page="calculator">＄<span>試算</span></button>
+  <button data-page="team">♙<span>組織</span></button>
+  <button data-page="fyc">▦<span>FYC</span></button>
+  <button data-page="settings">⚙<span>設定</span></button>
+</nav>
+
+<dialog id="memberDialog"><form method="dialog" class="dialog-form">
+  <h3 id="memberDialogTitle">新增成員</h3>
+  <input type="hidden" id="memberId" />
+  <label>姓名<input id="memberName" required /></label>
+  <label>直屬推薦人<select id="memberSponsor"></select></label>
+  <label>職級<select id="memberRank"><option>AG</option><option>UA</option><option>AS</option><option>SAS</option><option>SAS(B)</option><option>UM</option></select></label>
+  <label>是否優培<select id="memberElite"><option>否</option><option>是</option></select></label>
+  <div class="dialog-actions"><button value="cancel">取消</button><button type="button" class="primary" id="saveMember">儲存</button></div>
+</form></dialog>
+
+<dialog id="partnerDialog"><form method="dialog" class="dialog-form">
+  <h3>新增轄下獎金</h3><input type="hidden" id="partnerId" />
+  <label>夥伴<select id="partnerMember"></select></label>
+  <label>本期 FYC<input id="partnerFyc" type="number" min="0" /></label>
+  <label>行銷獎金<input id="partnerMarketing" type="number" min="0" /></label>
+  <label>手動調整<input id="partnerAdjust" type="number" /></label>
+  <label>是否計入<select id="partnerInclude"><option>是</option><option>否</option></select></label>
+  <div class="dialog-actions"><button value="cancel">取消</button><button type="button" class="primary" id="savePartner">儲存</button></div>
+</form></dialog>
+
+<dialog id="fycDialog"><form method="dialog" class="dialog-form">
+  <h3>新增每月 FYC</h3><input type="hidden" id="fycId" />
+  <label>月份<input id="fycMonth" type="month" required /></label>
+  <label>夥伴<select id="fycMember"></select></label>
+  <label>原始 FYC<input id="fycRaw" type="number" min="0" /></label>
+  <label>首期符合 10%？<select id="fycBonus"><option>否</option><option>是</option></select></label>
+  <div class="dialog-actions"><button value="cancel">取消</button><button type="button" class="primary" id="saveFyc">儲存</button></div>
+</form></dialog>
+
+<script src="bonus-rules.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
